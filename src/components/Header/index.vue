@@ -72,7 +72,7 @@ export default {
       // 第三种： 对象写法  （最常用 最好用）
       this.$router.push({
         name: "search", // 这里需要写 name 形式 才能跳转
-        params: { keyword: this.keyword },
+        params: { keyword: this.keyword ||undefined},
         query: { k: this.keyword.toUpperCase() },
       });
     },
