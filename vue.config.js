@@ -2,6 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave:false,
+  // -------------------代理跨域 ---------------
   devServer: {
     // // true 则热更新，false 则手动刷新，默认值为 true
     // inline: false,
