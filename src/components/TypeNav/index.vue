@@ -1,6 +1,6 @@
 <template>
   <div class="type-nav">
-    <div class="container">
+    <div class="container" @mouseenter="enterShow" @mouseleave="leaveShow">
       <h2 class="all">全部商品分类</h2>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -12,47 +12,113 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2">
-          <div class="item" v-for="(c1) in categoryList" :key="c1.categoryId">
-            <h3>
-              <a href="">{{c1.categoryName}}</a>
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem" v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
-                <dl class="fore">
-                  <dt>
-                    <a href="">{{c2.categoryName}}</a>
-                  </dt>
-                  <dd>
-                    <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
-                      <a href="">{{c3.categoryName}}</a>
-                    </em>
-                  </dd>
-                </dl>
+      <!-- 过渡动画 -->
+      <transition name="sort">
+        <div class="sort" v-show="show">
+          <!-- 使用 事件委派 + 编程式导航  实现路由的跳转-->
+          <div class="all-sort-list2" @click="goSearch">
+            <div class="item" v-for="c1 in categoryList" :key="c1.categoryId">
+              <h3>
+                <!-- 声明式导航 创建多个 router-link 组件 会造成卡顿 -->
+                <a
+                  :data-categoryName="c1.categoryName"
+                  :data-category1ID="c1.categoryId"
+                  >{{ c1.categoryName }}</a
+                >
+              </h3>
+              <div class="item-list clearfix">
+                <div
+                  class="subitem"
+                  v-for="c2 in c1.categoryChild"
+                  :key="c2.categoryId"
+                >
+                  <dl class="fore">
+                    <dt>
+                      <a
+                        :data-categoryName="c2.categoryName"
+                        :data-category2ID="c2.categoryId"
+                        >{{ c2.categoryName }}</a
+                      >
+                    </dt>
+                    <dd>
+                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                        <a
+                          :data-categoryName="c3.categoryName"
+                          :data-category3ID="c3.categoryId"
+                          >{{ c3.categoryName }}</a
+                        >
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   name: "TypeNav",
   // 组件挂载完毕，就可以向服务器发请求
-  mounted() {
-    // 通知 vuex 发请求 存储于仓库中
-    this.$store.dispatch('categoryList')
+  data() {
+    return {
+      show: true,
+    };
   },
-  computed:{
+  mounted() {
+    
+    if (this.$route.path != "/home") {
+      this.show = false;
+    }
+  },
+  computed: {
     ...mapState({
-      categoryList:state=>state.home.categoryList
-    })
-  }
+      categoryList: (state) => state.home.categoryList,
+    }),
+  },
+  methods: {
+    goSearch(event) {
+      let element = event.target;
+      // element.dataset 解析出 自定义属性
+      let { categoryname, category1id, category2id, category3id } =
+        element.dataset;
+
+      if (categoryname) {
+        // 判断出是否为 a 标签
+        let location = { name: "search" };
+        let query = { categoryName: categoryname };
+
+        if (category1id) {
+          // 判断出是否为 1级 标签
+          query.category1Id = category1id;
+        } else if (category2id) {
+          // 判断出是否为 2级 标签
+          query.category2Id = category2id;
+        } else {
+          // 判断出是否为 3级 标签
+          query.category3Id = category3id;
+        }
+        if(this.$route.params) {
+          location.query = query;
+          location.params = this.$route.params
+          this.$router.push(location);
+        }
+      }
+    },
+    enterShow() {
+      this.show = true;
+    },
+    leaveShow() {
+      if (this.$route.path != "/home") {
+        this.show = false;
+      }
+    },
+  },
 };
 </script>
 
@@ -111,7 +177,7 @@ export default {
               color: #333;
             }
           }
-        
+
           .item-list {
             display: none;
             position: absolute;
@@ -176,6 +242,19 @@ export default {
           background-color: skyblue;
         }
       }
+    }
+    // 过渡动画的样式
+    // 开始时动画(进入)
+    .sort-enter{
+      height: 0px;
+    }
+    // 结束时动画(进入)
+    .sort-enter-to{
+      height: 461px;
+    }
+    // 定义动画时间速度
+    .sort-enter-active{
+      transition: all .5s linear;
     }
   }
 }

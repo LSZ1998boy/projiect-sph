@@ -16,6 +16,11 @@ export default {
   name: 'App',
   components: {
     Header,Footer
+  },
+  mounted() {
+    // 通知 vuex 发请求 存储于仓库中
+    // 定义在根组件 请求只会发一次  避免重复多次向服务器请求数据
+    this.$store.dispatch("categoryList");
   }
 }
 </script>

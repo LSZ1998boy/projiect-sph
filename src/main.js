@@ -8,9 +8,16 @@ Vue.component(TypeNav.name, TypeNav)
 import router from '@/router'
 // 引入仓库
 import store from '@/store'
+// 引入轮播图的包
+import 'swiper/css/swiper.css'
+
 // 测试
 // import {reqCategoryList} from '@/api'
 // reqCategoryList()
+
+// 引入 mockserver.js ------- 虚拟数据
+//  引入后 会自动执行一次
+import '@/mock/mockServer'
 
 Vue.config.productionTip = false
 
