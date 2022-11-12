@@ -5,14 +5,8 @@
         <h3 class="fl">{{ list.name }}</h3>
         <div class="fr">
           <ul class="nav-tabs clearfix">
-            <li class="active">
-              <a
-                :href="value.url"
-                data-toggle="tab"
-                v-for="(value, index) in list.navList"
-                :key="index"
-                >{{ value.text }}</a
-              >
+            <li class="active" v-for="(value, index) in list.navList" :key="index">
+              <a href="#tab1" data-toggle="tab">{{ value.text }}</a>
             </li>
           </ul>
         </div>
@@ -29,29 +23,16 @@
               <img :src="list.imgUrl" />
             </div>
             <div class="floorBanner">
-              <div class="swiper-container" id="floor1Swiper">
-                <div class="swiper">
-                  <div class="swiper-wrapper">
-                    <div
-                      class="swiper-slide"
-                      v-for="value in list.carouselList"
-                      :key="value.id"
-                    >
-                      <img :src="value.imgUrl" />
-                    </div>
-                  </div>
-                  <!-- 如果需要分页器 -->
-                  <div class="swiper-pagination"></div>
-                  <!-- 如果需要导航按钮 -->
-                  <div class="swiper-button-prev"></div>
-                  <div class="swiper-button-next"></div>
-                </div>
-              </div>
+              <!-- 轮播图位置 -->
+              <Carousel :list='list.carouselList'/>
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
-              <div class="floor-conver-pit" v-for="(value, index) in list.recommendList" :key="index">
-                <img :src="value" />
+              <div class="floor-conver-pit">
+                <img :src="list.recommendList[0]" />
+              </div>
+              <div class="floor-conver-pit">
+                <img :src="list.recommendList[1]" />
               </div>
             </div>
             <div class="split center">
@@ -59,6 +40,11 @@
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
+              <div class="floor-conver-pit">
+                <img :src="list.recommendList[2]" />
+              </div>
+              <div class="floor-conver-pit">
+                <img :src="list.recommendList[3]"/>
               </div>
             </div>
           </div>
@@ -72,26 +58,11 @@
 export default {
   // 父组件 home 给 floor 传来了值
   props: ["list"],
-  watch: {
-    list(newVal, oldVal) {   // ????????????????????
-      // 等 v-for渲染完返回的数据后 再操作
-      this.$nextTick(() => {
-        let mySwiper = new Swiper(".swiper", {
-          loop: true, // 循环模式选项
-          // 如果需要分页器
-          pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-          },
-          // 如果需要前进后退按钮
-          navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          },
-        });
-      });
-    },
+  mounted() {
+    // home 已经把轮播图数据传过来了 所以可以直接 在 mounted 中直接操作
+    
   },
+  
 };
 </script>
 
