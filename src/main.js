@@ -17,6 +17,9 @@ import 'swiper/css/swiper.css'
 // 测试
 // import {reqCategoryList} from '@/api'
 // reqCategoryList()
+// import {reqGetSearchInfo} from '@/api'
+// console.log(reqGetSearchInfo({}));
+
 
 // 引入 mockserver.js ------- 虚拟数据
 //  引入后 会自动执行一次
